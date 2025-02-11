@@ -64,6 +64,7 @@ public class PostController : ControllerBase
     {
         post.IsApproved = false;
         post.CreatedAt = DateTime.Now;
+        
         _dbContext.Posts.Add(post);
         _dbContext.SaveChanges();
         return Created($"/api/post/{post.Id}", post);
