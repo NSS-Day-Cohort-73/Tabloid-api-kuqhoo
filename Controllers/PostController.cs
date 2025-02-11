@@ -58,4 +58,14 @@ public class PostController : ControllerBase
             return StatusCode(500, "An error occurred while retrieving posts.");
         }
     }
+
+    [HttpPost]
+    public IActionResult CreatePost(Post post)
+    {
+        post.IsApproved = false;
+        post.CreatedAt = DateTime.Now;
+        _dbContext.Posts.Add(post);
+        _dbContext.SaveChanges();
+        return Created($"/api/post/{post.Id}", post);
+    }
 } 
