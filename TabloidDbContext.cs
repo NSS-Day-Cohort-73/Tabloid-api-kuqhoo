@@ -347,5 +347,16 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
             .WithMany()
             .HasForeignKey(s => s.AuthorId)
             .OnDelete(DeleteBehavior.NoAction);
+
+        // Configure Post relationships
+        modelBuilder.Entity<Post>()
+            .HasOne(p => p.UserProfile)
+            .WithMany()
+            .HasForeignKey(p => p.UserId);
+
+        modelBuilder.Entity<Post>()
+            .HasOne(p => p.Category)
+            .WithMany()
+            .HasForeignKey(p => p.CategoryId);
     }
 };
