@@ -59,12 +59,23 @@ public class PostController : ControllerBase
         }
     }
 
+    [HttpDelete("{id}")]
+    public IActionResult DeletePost(int id)
+    {
+        Post postToDelete = _dbContext.Posts
+            .SingleOrDefault((p) => p.Id == id);
+        _dbContext.Posts.Remove(postToDelete);
+        _dbContext.SaveChanges();
+        return NoContent();
+
+    }
+
     [HttpPost]
     public IActionResult CreatePost(Post post)
     {
         post.IsApproved = true;
         post.CreatedAt = DateTime.Now;
-        
+
         _dbContext.Posts.Add(post);
         _dbContext.SaveChanges();
         return Created($"/api/post/{post.Id}", post);
