@@ -67,5 +67,17 @@ public class PostController : ControllerBase
         _dbContext.Posts.Remove(postToDelete);
         _dbContext.SaveChanges();
         return NoContent();
+
+    }
+
+    [HttpPost]
+    public IActionResult CreatePost(Post post)
+    {
+        post.IsApproved = true;
+        post.CreatedAt = DateTime.Now;
+
+        _dbContext.Posts.Add(post);
+        _dbContext.SaveChanges();
+        return Created($"/api/post/{post.Id}", post);
     }
 } 
