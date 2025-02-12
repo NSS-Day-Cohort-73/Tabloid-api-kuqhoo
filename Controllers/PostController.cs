@@ -58,4 +58,14 @@ public class PostController : ControllerBase
             return StatusCode(500, "An error occurred while retrieving posts.");
         }
     }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeletePost(int id)
+    {
+        Post postToDelete = _dbContext.Posts
+            .SingleOrDefault((p) => p.Id == id);
+        _dbContext.Posts.Remove(postToDelete);
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
 } 
