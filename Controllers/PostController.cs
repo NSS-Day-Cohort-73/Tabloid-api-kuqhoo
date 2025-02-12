@@ -62,7 +62,7 @@ public class PostController : ControllerBase
     [HttpPost]
     public IActionResult CreatePost(Post post)
     {
-        post.IsApproved = false;
+        post.IsApproved = true;
         post.CreatedAt = DateTime.Now;
         
         _dbContext.Posts.Add(post);
