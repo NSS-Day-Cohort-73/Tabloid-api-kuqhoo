@@ -59,14 +59,69 @@ public class PostController : ControllerBase
         }
     }
 
+    [HttpDelete("{id}")]
+    public IActionResult DeletePost(int id)
+    {
+        Post postToDelete = _dbContext.Posts
+            .SingleOrDefault((p) => p.Id == id);
+        _dbContext.Posts.Remove(postToDelete);
+        _dbContext.SaveChanges();
+        return NoContent();
+
+    }
+
     [HttpPost]
     public IActionResult CreatePost(Post post)
     {
         post.IsApproved = true;
         post.CreatedAt = DateTime.Now;
-        
+
         _dbContext.Posts.Add(post);
         _dbContext.SaveChanges();
         return Created($"/api/post/{post.Id}", post);
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult GetById(int id)
+    {
+        try 
+        {
+            PostDTO post = _dbContext.Posts
+                .Include(p => p.UserProfile)
+                    .ThenInclude(up => up.IdentityUser)
+                .Include(p => p.Category)
+                .Where(p => p.Id == id)
+                .Select(p => new PostDTO
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    CreatedAt = p.CreatedAt,
+                    HeaderImage = p.HeaderImage,
+                    IsApproved = p.IsApproved,
+                    CategoryName = p.Category.Name,
+                    Author = new UserProfileDTO
+                    {
+                        Id = p.UserProfile.Id,
+                        FirstName = p.UserProfile.FirstName,
+                        LastName = p.UserProfile.LastName,
+                        Email = p.UserProfile.IdentityUser.Email,
+                        UserName = p.UserProfile.IdentityUser.UserName,
+                        ImageLocation = p.UserProfile.ImageLocation
+                    }
+                })
+                .FirstOrDefault();
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(post);
+        }
+        catch
+        {
+            return StatusCode(500, "An error occurred while retrieving the post.");
+        }
     }
 } 
