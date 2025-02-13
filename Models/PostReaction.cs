@@ -10,7 +10,7 @@ public class PostReaction
 
     public int PostId { get; set; }
 
-    public int reactionTypeId { get; set; }
+    public int ReactionTypeId { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

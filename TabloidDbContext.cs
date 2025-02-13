@@ -287,7 +287,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                     Id = 1,
                     UserProfileId = 2,
                     PostId = 1,
-                    reactionTypeId = 1,
+                    ReactionTypeId = 1,
                     CreatedAt = new DateTime(2024, 1, 11, 12, 0, 0),
                 },
                 new PostReaction
@@ -295,7 +295,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                     Id = 2,
                     UserProfileId = 3,
                     PostId = 1,
-                    reactionTypeId = 1,
+                    ReactionTypeId = 1,
                     CreatedAt = new DateTime(2024, 1, 11, 13, 15, 0),
                 },
                 new PostReaction
@@ -303,7 +303,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                     Id = 3,
                     UserProfileId = 4,
                     PostId = 2,
-                    reactionTypeId = 1,
+                    ReactionTypeId = 1,
                     CreatedAt = new DateTime(2024, 1, 16, 14, 30, 0),
                 }
             );
@@ -315,37 +315,37 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                 {
                     Id = 1,
                     Type = "Like",
-                    faIcon = "faThumbsUp",
+                    FaIcon = "faThumbsUp",
                 },
                 new ReactionType
                 {
                     Id = 2,
                     Type = "Dislike",
-                    faIcon = "faThumbsDown",
+                    FaIcon = "faThumbsDown",
                 },
                 new ReactionType
                 {
                     Id = 3,
                     Type = "Love",
-                    faIcon = "faHeart",
+                    FaIcon = "faHeart",
                 },
                 new ReactionType
                 {
                     Id = 4,
                     Type = "Trash",
-                    faIcon = "faTrashCan",
+                    FaIcon = "faTrashCan",
                 },
                 new ReactionType
                 {
                     Id = 5,
                     Type = "Angry",
-                    faIcon = "faFaceAngry",
+                    FaIcon = "faFaceAngry",
                 },
                 new ReactionType
                 {
                     Id = 6,
                     Type = "Sad",
-                    faIcon = "faFaceSadCry",
+                    FaIcon = "faFaceSadCry",
                 }
             );
 
