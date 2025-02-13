@@ -42,7 +42,7 @@ public class CommentController : ControllerBase
                         FirstName = c.UserProfile.FirstName,
                         LastName = c.UserProfile.LastName,
                         Email = c.UserProfile.Email,
-                        UserName = c.UserProfile.UserName,
+                        UserName = c.UserProfile.IdentityUser.UserName,
                         ImageLocation = c.UserProfile.ImageLocation
                     }
                 })
