@@ -14,7 +14,8 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Post> Posts { get; set; }
     public DbSet<Comment> Comments { get; set; }
-    public DbSet<Reaction> Reactions { get; set; }
+    public DbSet<PostReaction> PostReactions { get; set; }
+    public DbSet<ReactionType> ReactionTypes { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<AdminLog> AdminLogs { get; set; }
 
@@ -216,7 +217,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                 new Post
                 {
                     Id = 1,
-                    UserId = 1,
+                    UserProfileId = 1,
                     Title = "Getting Started with .NET Identity",
                     Content =
                         "A comprehensive guide to implementing authentication in .NET applications...",
@@ -228,7 +229,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                 new Post
                 {
                     Id = 2,
-                    UserId = 2,
+                    UserProfileId = 2,
                     Title = "Web Development Best Practices 2024",
                     Content = "Essential best practices for modern web development...",
                     CategoryId = 4,
@@ -239,7 +240,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                 new Post
                 {
                     Id = 3,
-                    UserId = 3,
+                    UserProfileId = 3,
                     Title = "Modern CSS Techniques",
                     Content = "Exploring modern CSS techniques and best practices...",
                     CategoryId = 4,
@@ -255,7 +256,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                 new Comment
                 {
                     Id = 1,
-                    UserId = 2,
+                    UserProfileId = 2,
                     PostId = 1,
                     Content = "Stinky!!!!",
                     CreatedAt = new DateTime(2024, 1, 11, 14, 30, 0),
@@ -263,7 +264,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                 new Comment
                 {
                     Id = 2,
-                    UserId = 3,
+                    UserProfileId = 3,
                     PostId = 1,
                     Content = "This helped me understand authentication better.",
                     CreatedAt = new DateTime(2024, 1, 11, 15, 45, 0),
@@ -271,7 +272,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                 new Comment
                 {
                     Id = 3,
-                    UserId = 4,
+                    UserProfileId = 4,
                     PostId = 2,
                     Content = "Very useful best practices, thank you.",
                     CreatedAt = new DateTime(2024, 1, 16, 10, 15, 0),
@@ -279,31 +280,72 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
             );
 
         modelBuilder
-            .Entity<Reaction>()
+            .Entity<PostReaction>()
             .HasData(
-                new Reaction
+                new PostReaction
                 {
                     Id = 1,
-                    UserId = 2,
+                    UserProfileId = 2,
                     PostId = 1,
-                    Type = "like",
+                    reactionTypeId = 1,
                     CreatedAt = new DateTime(2024, 1, 11, 12, 0, 0),
                 },
-                new Reaction
+                new PostReaction
                 {
                     Id = 2,
-                    UserId = 3,
+                    UserProfileId = 3,
                     PostId = 1,
-                    Type = "like",
+                    reactionTypeId = 1,
                     CreatedAt = new DateTime(2024, 1, 11, 13, 15, 0),
                 },
-                new Reaction
+                new PostReaction
                 {
                     Id = 3,
-                    UserId = 4,
+                    UserProfileId = 4,
                     PostId = 2,
-                    Type = "like",
+                    reactionTypeId = 1,
                     CreatedAt = new DateTime(2024, 1, 16, 14, 30, 0),
+                }
+            );
+
+        modelBuilder
+            .Entity<ReactionType>()
+            .HasData(
+                new ReactionType
+                {
+                    Id = 1,
+                    Type = "Like",
+                    faIcon = "faThumbsUp",
+                },
+                new ReactionType
+                {
+                    Id = 2,
+                    Type = "Dislike",
+                    faIcon = "faThumbsDown",
+                },
+                new ReactionType
+                {
+                    Id = 3,
+                    Type = "Love",
+                    faIcon = "faHeart",
+                },
+                new ReactionType
+                {
+                    Id = 4,
+                    Type = "Trash",
+                    faIcon = "faTrashCan",
+                },
+                new ReactionType
+                {
+                    Id = 5,
+                    Type = "Angry",
+                    faIcon = "faFaceAngry",
+                },
+                new ReactionType
+                {
+                    Id = 6,
+                    Type = "Sad",
+                    faIcon = "faFaceSadCry",
                 }
             );
 
@@ -313,21 +355,21 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
                 new Subscription
                 {
                     Id = 1,
-                    UserId = 2,
+                    UserProfileId = 2,
                     AuthorId = 1,
                     SubscribedAt = new DateTime(2024, 1, 15),
                 },
                 new Subscription
                 {
                     Id = 2,
-                    UserId = 3,
+                    UserProfileId = 3,
                     AuthorId = 1,
                     SubscribedAt = new DateTime(2024, 1, 16),
                 },
                 new Subscription
                 {
                     Id = 3,
-                    UserId = 4,
+                    UserProfileId = 4,
                     AuthorId = 2,
                     SubscribedAt = new DateTime(2024, 1, 17),
                 }
@@ -338,7 +380,7 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
             .Entity<Subscription>()
             .HasOne(s => s.Subscriber)
             .WithMany()
-            .HasForeignKey(s => s.UserId)
+            .HasForeignKey(s => s.UserProfileId)
             .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder
@@ -349,12 +391,14 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
             .OnDelete(DeleteBehavior.NoAction);
 
         // Configure Post relationships
-        modelBuilder.Entity<Post>()
+        modelBuilder
+            .Entity<Post>()
             .HasOne(p => p.UserProfile)
             .WithMany()
-            .HasForeignKey(p => p.UserId);
+            .HasForeignKey(p => p.UserProfileId);
 
-        modelBuilder.Entity<Post>()
+        modelBuilder
+            .Entity<Post>()
             .HasOne(p => p.Category)
             .WithMany()
             .HasForeignKey(p => p.CategoryId);
