@@ -64,10 +64,42 @@ public class PostController : ControllerBase
     {
         Post postToDelete = _dbContext.Posts
             .SingleOrDefault((p) => p.Id == id);
+        if (postToDelete == null)
+        {
+            return NotFound($"Post with Id = {id} not found");
+        }
         _dbContext.Posts.Remove(postToDelete);
         _dbContext.SaveChanges();
         return NoContent();
 
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult EditPost(int id, Post post)
+    {
+        try
+        {
+            if (id != post.Id)
+            {
+                return BadRequest("PostId mismatch");
+            }
+            Post postToUpdate = _dbContext.Posts
+                .SingleOrDefault((p) => p.Id == id);
+            if (postToUpdate == null)
+            {
+                return NotFound($"Post with Id = {id} not found");
+            }
+            postToUpdate.Title = post.Title;
+            postToUpdate.Content = post.Content;
+            postToUpdate.Category = post.Category;
+            _dbContext.SaveChanges();
+            return NoContent();
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                "Error updating data");
+        }
     }
 
     [HttpPost]
