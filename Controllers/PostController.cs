@@ -144,11 +144,15 @@ public class PostController : ControllerBase
                     Title = p.Title,
                     Content = p.Content,
                     CreatedAt = p.CreatedAt,
+                    HeaderImage = p.HeaderImage,
                     CategoryName = p.Category.Name,
                     Author = new UserProfileDTO
                     {
                         Id = p.UserProfile.Id,
-                        UserName = p.UserProfile.IdentityUser.UserName
+                        FirstName = p.UserProfile.FirstName,
+                        LastName = p.UserProfile.LastName,
+                        UserName = p.UserProfile.IdentityUser.UserName,
+                        ImageLocation = p.UserProfile.ImageLocation
                     }
                 })
                 .ToList();
@@ -179,15 +183,27 @@ public class PostController : ControllerBase
 
             List<PostDTO> posts = _dbContext.Posts
                 .Include(p => p.Category)
+                .Include(p => p.UserProfile)
+                    .ThenInclude(up => up.IdentityUser)
                 .Where(p => p.UserProfileId == userProfile.Id)
                 .OrderByDescending(p => p.CreatedAt)
                 .Select(p => new PostDTO
                 {
                     Id = p.Id,
                     Title = p.Title,
+                    Content = p.Content,
+                    HeaderImage = p.HeaderImage,
                     IsApproved = p.IsApproved,
                     CreatedAt = p.CreatedAt,
-                    CategoryName = p.Category.Name
+                    CategoryName = p.Category.Name,
+                    Author = new UserProfileDTO
+                    {
+                        Id = p.UserProfile.Id,
+                        FirstName = p.UserProfile.FirstName,
+                        LastName = p.UserProfile.LastName,
+                        UserName = p.UserProfile.IdentityUser.UserName,
+                        ImageLocation = p.UserProfile.ImageLocation
+                    }
                 })
                 .ToList();
 
