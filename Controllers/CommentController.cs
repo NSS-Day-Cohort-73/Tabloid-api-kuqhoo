@@ -58,4 +58,16 @@ public class CommentController : ControllerBase
             return StatusCode(500, "An error occurred while retrieving posts.");
         }
     }
+
+    [HttpPost]
+    public IActionResult PostNewComment(Comment comment)
+    {
+        comment.CreatedAt = DateTime.Now;
+        
+        _dbContext.Comments.Add(comment);
+        _dbContext.SaveChanges();
+        return Created($"/api/comment/{comment.Id}", comment);
+    }
+
+
 };
