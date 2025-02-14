@@ -91,7 +91,7 @@ public class UserProfileController : ControllerBase
     }
 
     [HttpGet("admin/details/{id}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public IActionResult GetUserProfileDetails(int id)
     {
         var userProfile = _dbContext
