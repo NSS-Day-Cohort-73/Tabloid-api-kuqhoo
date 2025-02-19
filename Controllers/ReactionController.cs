@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tabloid.Data;
+using Tabloid.Models;
 using Tabloid.Models.DTOs;
 
 namespace Tabloid.Controllers;
@@ -86,5 +87,13 @@ public class ReactionController : ControllerBase
             .ToList();
 
         return Ok(postReactions);
+    }
+
+    [HttpPost("type")]
+    public IActionResult PostAType(ReactionType newReactionType)
+    {
+        _dbContext.ReactionTypes.Add(newReactionType);
+        _dbContext.SaveChanges();
+        return NoContent();
     }
 }
