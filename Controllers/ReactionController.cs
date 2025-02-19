@@ -96,4 +96,43 @@ public class ReactionController : ControllerBase
         _dbContext.SaveChanges();
         return NoContent();
     }
+
+    [HttpDelete("type/{id}")]
+    public IActionResult DeleteAType(int id)
+    {
+        ReactionType reactionToDelete = _dbContext
+            .ReactionTypes.Where(rt => rt.Id == id)
+            .FirstOrDefault();
+
+        if (reactionToDelete == null)
+        {
+            return BadRequest();
+        }
+        _dbContext.ReactionTypes.Remove(reactionToDelete);
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
+
+    [HttpPut("type/{id}")]
+    public IActionResult UpdateAType(ReactionType newReaction, int id)
+    {
+        ReactionType reactionToUpdate = _dbContext
+            .ReactionTypes.Where(rt => rt.Id == id)
+            .FirstOrDefault();
+
+        if (reactionToUpdate == null)
+        {
+            return BadRequest();
+        }
+        if (reactionToUpdate.Type != null || reactionToUpdate.Type != "")
+        {
+            reactionToUpdate.Type = newReaction.Type;
+        }
+        if (reactionToUpdate.FaIcon != null || reactionToUpdate.FaIcon != "")
+        {
+            reactionToUpdate.FaIcon = newReaction.FaIcon;
+        }
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
 }
