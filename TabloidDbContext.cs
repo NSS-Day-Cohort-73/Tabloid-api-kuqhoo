@@ -402,5 +402,6 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
             .HasOne(p => p.Category)
             .WithMany()
             .HasForeignKey(p => p.CategoryId);
+
     }
 };
