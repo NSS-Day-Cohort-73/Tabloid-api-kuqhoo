@@ -214,4 +214,62 @@ public class PostController : ControllerBase
             return StatusCode(500, "An error occurred while retrieving your posts.");
         }
     }
+
+    [HttpGet("search")]
+    public IActionResult SearchPosts([FromQuery] string searchTerm, [FromQuery] int? categoryId)
+    {
+        try 
+        {
+            var query = _dbContext.Posts
+                .Include(p => p.UserProfile)
+                    .ThenInclude(up => up.IdentityUser)
+                .Include(p => p.Category)
+                .Where(p => p.IsApproved);
+
+            // Apply category filter
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId);
+            }
+
+            // Apply text search
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                query = query.Where(p => 
+                    p.Title.ToLower().Contains(searchTerm) ||
+                    p.Category.Name.ToLower().Contains(searchTerm)
+                );
+            }
+
+            List<PostDTO> posts = query
+                .OrderByDescending(p => p.CreatedAt)
+                .Select(p => new PostDTO
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    CreatedAt = p.CreatedAt,
+                    HeaderImage = p.HeaderImage,
+                    IsApproved = p.IsApproved,
+                    CategoryName = p.Category.Name,
+                    Author = new UserProfileDTO
+                    {
+                        Id = p.UserProfile.Id,
+                        FirstName = p.UserProfile.FirstName,
+                        LastName = p.UserProfile.LastName,
+                        Email = p.UserProfile.IdentityUser.Email,
+                        UserName = p.UserProfile.IdentityUser.UserName,
+                        ImageLocation = p.UserProfile.ImageLocation
+                    }
+                })
+                .ToList();
+
+            return Ok(posts);
+        }
+        catch
+        {
+            return StatusCode(500, "An error occurred while searching posts.");
+        }
+    }
 } 
