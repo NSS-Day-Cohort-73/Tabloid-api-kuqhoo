@@ -28,5 +28,4 @@ public class Post
     // Navigation properties
     public UserProfile UserProfile { get; set; }
     public Category Category { get; set; }
-    public ICollection<ReactionType> ReactionTypes { get; set; }
 }

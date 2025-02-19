@@ -403,14 +403,5 @@ public class TabloidDbContext : IdentityDbContext<IdentityUser>
             .WithMany()
             .HasForeignKey(p => p.CategoryId);
 
-        modelBuilder.Entity<PostReaction>()
-            .HasOne(pr => pr.Post)
-            .WithMany()
-            .HasForeignKey(pr => pr.PostId);
-
-        modelBuilder.Entity<PostReaction>()
-            .HasOne(pr => pr.ReactionType)
-            .WithMany()
-            .HasForeignKey(pr => pr.ReactionTypeId);
     }
 };

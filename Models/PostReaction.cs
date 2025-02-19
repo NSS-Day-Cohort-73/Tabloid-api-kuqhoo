@@ -17,5 +17,4 @@ public class PostReaction
     // Navigation properties
     public UserProfile UserProfile { get; set; }
     public Post Post { get; set; }
-    public ReactionType ReactionType { get; set; }
 }
