@@ -13,6 +13,7 @@ public class PostReactionDTO
     public DateTime CreatedAt { get; set; }
 
     // Navigation properties
+    public ReactionTypeDTO ReactionType { get; set; }
     public UserProfileDTO UserProfile { get; set; }
     public PostDTO Post { get; set; }
 }

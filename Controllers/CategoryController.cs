@@ -6,7 +6,7 @@ using Tabloid.Models;
 using Tabloid.Models.DTOs;
 
 [ApiController]
-// [Authorize]
+[Authorize]
 [Route("api/[controller]")]
 public class CategoryController : ControllerBase
 {
